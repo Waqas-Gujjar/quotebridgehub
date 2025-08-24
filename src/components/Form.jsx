@@ -1,0 +1,231 @@
+import React, { useState } from "react";
+
+export default function MultiStepQuoteForm() {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    enrolled: null,
+    name: "",
+    zip: "",
+    email: "",
+    phone: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  // ab 2 hi steps hain -> 50% aur 100%
+  const PROGRESS = [50, 100];
+  const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
+
+  const next = () => setStep((s) => Math.min(s + 1, 1)); // sirf 0 -> 1
+  const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateCurrentStep = () => {
+    const newErrors = {};
+    if (step === 0 && formData.enrolled === null)
+      newErrors.enrolled = "Please select an option";
+
+    if (step === 1) {
+      if (!formData.name.trim()) newErrors.name = "Name is required";
+      if (!formData.zip.trim()) newErrors.zip = "Zip code is required";
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const Handlenext = (e) => {
+    e?.preventDefault();
+    if (validateCurrentStep()) next();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateCurrentStep()) return;
+    setSubmitted(true);
+
+    // page refresh
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center bg-gray-50 px-4">
+        {/* Progress Bar */}
+        <div className="w-full max-w-lg mb-8">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              100% complete
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full"
+              style={{ width: `100%` }}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-2xl shadow text-center">
+          <h2 className="text-2xl font-bold text-green-600 mb-2">
+            🎉 Form Submitted!
+          </h2>
+          <p className="text-gray-600">
+            Thank you for your submission. Page will refresh shortly...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center mt-12 px-4">
+      {/* Progress Bar */}
+      <div className="w-full max-w-lg mb-8">
+        <div className="flex justify-between mb-2">
+          <span className="text-sm font-medium text-gray-700">
+            {progress}% complete
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-blue-600 h-2 rounded-full transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      <form
+        className="w-full max-w-xl items-center p-8 rounded-2xl"
+        onSubmit={handleSubmit}
+      >
+        {/* STEP 0 */}
+        {step === 0 && (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-8">
+              Are you currently enrolled in Medicare Parts A & B?
+            </h2>
+            <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
+              <button
+                type="button"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg cursor-pointer shadow-lg hover:bg-blue-700 transition"
+                onClick={() => {
+                  setFormData((p) => ({ ...p, enrolled: true }));
+                  setErrors({});
+                  next();
+                }}
+              >
+                YES
+              </button>
+              <button
+                type="button"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg cursor-pointer shadow-lg hover:bg-blue-700 transition"
+                onClick={() => {
+                  setFormData((p) => ({ ...p, enrolled: false }));
+                  setErrors({});
+                  next();
+                }}
+              >
+                NO
+              </button>
+              {errors.enrolled && (
+                <p className="text-red-500 text-sm mt-2">{errors.enrolled}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 1 - Contact Form */}
+        {step === 1 && (
+          <div className="flex flex-col items-center w-full justify-center">
+            <h2 className="text-4xl font-bold mb-2 text-center">
+              What's your contact info?
+            </h2>
+            <p className="text-gray-600 text-lg mb-6 text-center">
+              We verify your information to provide accurate local quotes.
+            </p>
+
+            {/* Full Name */}
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={onChange}
+              placeholder="Full Name"
+              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mb-2">{errors.name}</p>
+            )}
+
+            {/* Zip Code */}
+            <input
+              type="text"
+              name="zip"
+              value={formData.zip}
+              onChange={onChange}
+              placeholder="Zip Code"
+              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+            />
+            {errors.zip && (
+              <p className="text-red-500 text-sm mb-2">{errors.zip}</p>
+            )}
+
+            {/* Email */}
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={onChange}
+              placeholder="Email Address"
+              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mb-2">{errors.email}</p>
+            )}
+
+            {/* Phone Number */}
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={onChange}
+              placeholder="Phone Number"
+              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mb-2">{errors.phone}</p>
+            )}
+
+            {/* Submit full width */}
+            <button
+              type="submit"
+              className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
+            >
+              SUBMIT →
+            </button>
+
+            {/* Back button */}
+            <div className="mt-4">
+              <button
+                type="button"
+                className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
+                onClick={back}
+              >
+                ← BACK
+              </button>
+            </div>
+          </div>
+        )}
+      </form>
+    </div>
+  );
+}
