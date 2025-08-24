@@ -3,21 +3,30 @@ import React from "react";
 const Main = () => {
   return (
     <>
-      {/* Top Line with Left Text & Right Logo */}
-      <div className="flex justify-between items-center px-75 py-4  border-t border-gray-200">
-        {/* Left side text */}
-        <span className="text-blue-600 font-semibold text-lg">QuoteBridgeHub</span>
+      {/* Top Line with Background */}
+      <div className="border-t border-b border-gray-300 bg-gray-50">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 lg:px-12 py-4 gap-4">
+          {/* Left side text */}
+          <div className="text-center sm:text-left">
+            <span className="text-blue-600 font-semibold text-2xl sm:text-3xl md:text-4xl">
+              QuoteBridgeHub
+            </span>
+            <p className="text-sm sm:text-base text-gray-600">
+              - A non-government entity -
+            </p>
+          </div>
 
-        {/* Right side logo */}
-        <img
-          src="/image/securelogos.png" // apna actual logo path yahan daalna hai
-          alt="Logo"
-          className="h-12` w-auto"
-        />
+          {/* Right side logo */}
+          <img
+            src="/image/securelogos.png" // apna actual logo path yahan daalna hai
+            alt="Logo"
+            className="h-8 sm:h-10 md:h-12 w-auto"
+          />
+        </div>
       </div>
 
       {/* Disclaimer Content */}
-      <div className="w-full text-gray-600 text-sm px-6 py-8">
+      <div className="w-full text-gray-600 text-sm px-4 sm:px-6 lg:px-12 py-8">
         <div className="max-w-5xl mx-auto leading-relaxed space-y-4">
           <p>
             This advertisement is a solicitation to sell insurance, and is coming
