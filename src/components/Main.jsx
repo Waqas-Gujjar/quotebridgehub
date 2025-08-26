@@ -6,35 +6,45 @@ const Main = () => {
       {/* Top Line with Background */}
       <div className="border-t border-b border-gray-300 bg-gray-50">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 lg:px-12 py-4 gap-4">
-          {/* Left side text */}
-          <div className="text-center sm:text-left">
-            <span className="text-blue-600 font-semibold text-2xl sm:text-3xl md:text-4xl">
-              QuoteBridgeHub
-            </span>
-            <p className="text-sm sm:text-base text-gray-800">
-              - A non-government entity -
-            </p>
+          {/* Left side: Logo + Brand */}
+          <div className="flex items-center ">
+            {/* Logo Image */}
+            <img
+              src="image/logo.png" // <-- Replace with your logo path
+              alt="QuoteBridgeHub Logo"
+              className="w-20 h-20 sm:w-20 sm:h-20 object-contain"
+            />
+
+            {/* Brand + Subtitle */}
+            <div className="flex flex-col">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl text-blue-600 font-bold">
+                QuoteBridgeHub
+              </h1>
+              <p className="text-sm font-semibold text-gray-800">
+                - A non-government entity -
+              </p>
+            </div>
           </div>
 
           {/* Right side logo */}
           <img
-            src="/image/securelogos.png" // apna actual logo path yahan daalna hai
-            alt="Logo"
+            src="/image/securelogos.png" // <-- Replace with your logo path
+            alt="Secure Logos"
             className="h-8 sm:h-10 md:h-12 w-auto"
           />
         </div>
       </div>
 
       {/* Disclaimer Content */}
-      <div className="w-full text-gray-800 text-sm px-4 sm:px-6 lg:px-12 py-8">
+      <div
+        className="w-full text-gray-800 text-sm px-4 sm:px-6 lg:px-12 py-8"
+        role="contentinfo"
+      >
         <div className="max-w-5xl mx-auto leading-relaxed space-y-4">
           <p>
-            This advertisement is a solicitation to sell insurance, and is coming
-            from a licensed health insurance agency, and not from CMS or a
-            government agency.
+            This advertisement is a solicitation to sell insurance, and its not from CMS or a government agency.
           </p>
 
-          {/* 🔹 New Disclaimer Section Added */}
           <p>
             QuoteBridgeHub.com is a referral service that provides information and
             connects consumers with companies that may offer certain types of
@@ -53,7 +63,7 @@ const Main = () => {
             choose, assist with enrollment.
           </p>
 
-          <p className="font-semibold ">
+          <p className="font-semibold text-gray-900">
             We do not offer every plan available in your area. Currently, we
             represent x organizations offering xx products in your area. For a
             complete list of your options, please visit Medicare.gov, call
@@ -69,15 +79,10 @@ const Main = () => {
             renewal.
           </p>
 
+          
           <p>
-            By using this site, you acknowledge that you have read and agree to our
-            Terms of Service and Privacy Policy. We are committed to protecting
-            your privacy. If you do not want to share your information, please
-            click on Do Not Sell My Personal Information for more details.
+            please contact <span className="text-green-500">support@quotebridgehub.com</span> for any assistance
           </p>
-          {/* 🔹 End New Disclaimer Section */}
-
-        
         </div>
       </div>
     </>

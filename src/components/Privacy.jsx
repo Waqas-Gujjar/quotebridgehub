@@ -5,9 +5,7 @@ const Privacy = () => {
     <div className="max-w-5xl mx-auto px-6 lg:px-12 py-12 text-gray-700 leading-relaxed">
       {/* Page Heading */}
       <h1 className="text-3xl font-bold text-center mb-6">Privacy Policy</h1>
-      <p className="text-center text-sm text-gray-500 mb-12">
-        <strong>Effective Date:</strong> [Insert Date]
-      </p>
+      
 
       {/* Section 1 */}
       <h2 className="text-xl font-semibold mt-6 mb-2">
@@ -91,10 +89,9 @@ const Privacy = () => {
         If you have any questions about this Privacy Policy or our Terms of
         Service, please contact us at:
       </p>
-      <p className="mt-2">
-        📧 <strong>[Insert Contact Email]</strong>
+      <p className="mt-2 font-semibold">
+        Email: <span>support@quotebridgehub.com </span> 
         <br />
-        📞 <strong>[Insert Contact Phone Number]</strong>
       </p>
 
       

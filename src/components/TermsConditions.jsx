@@ -2,14 +2,12 @@ import React from 'react'
 
 const TermsConditions = () => {
    return (
-    <div className="max-w-5xl mx-auto px-6 lg:px-12 py-12 text-gray-700 leading-relaxed">
+    <div className="max-w-5xl mx-auto px-6 bottom-5 lg:px-12 py-12 text-gray-700 leading-relaxed">
       {/* Page Heading */}
       <h1 className="text-3xl font-bold text-center mb-6">
         Terms and Conditions
       </h1>
-      <p className="text-center text-sm text-gray-500 mb-12">
-        <strong>Effective Date:</strong> [Insert Date]
-      </p>
+      
 
       {/* Section 1 */}
       <h2 className="text-xl font-semibold mt-6 mb-2">

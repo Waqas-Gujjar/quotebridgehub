@@ -18,7 +18,10 @@ const App = () => {
         <Route path="/privacy" element={<Privacy />} />
         {/* <Route path="/do-not-sell" element={<DoNotSell />} /> */}
       </Routes>
-    <Footer />
+      <div className='mt-5'>
+         <Footer />
+      </div>
+    
     </>
   )
 }

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Punchline from "./Punchline";
 
 export default function MultiStepQuoteForm() {
   const [step, setStep] = useState(0);
@@ -9,11 +8,12 @@ export default function MultiStepQuoteForm() {
     name: "",
     email: "",
     phone: "",
+    consent: false,
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
-  // Now 3 steps -> 0%, 50%, 100%
+  // Steps progress: 0%, 50%, 100%
   const PROGRESS = [0, 50, 100];
   const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
 
@@ -37,6 +37,7 @@ export default function MultiStepQuoteForm() {
       if (!formData.name.trim()) newErrors.name = "Name is required";
       if (!formData.email.trim()) newErrors.email = "Email is required";
       if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+      if (!formData.consent) newErrors.consent = "You must agree to the consent";
     }
 
     setErrors(newErrors);
@@ -53,7 +54,7 @@ export default function MultiStepQuoteForm() {
     if (!validateCurrentStep()) return;
     setSubmitted(true);
 
-    // page refresh
+    // Optional page refresh after submission
     setTimeout(() => {
       window.location.reload();
     }, 2000);
@@ -62,8 +63,6 @@ export default function MultiStepQuoteForm() {
   if (submitted) {
     return (
       <div className="flex flex-col items-center justify-center bg-gray-50 px-4">
-
-       
         {/* Progress Bar */}
         <div className="w-full max-w-lg mb-8">
           <div className="flex justify-between mb-2">
@@ -72,10 +71,7 @@ export default function MultiStepQuoteForm() {
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full"
-              style={{ width: `100%` }}
-            />
+            <div className="bg-blue-600 h-2 rounded-full" style={{ width: `100%` }} />
           </div>
         </div>
 
@@ -93,9 +89,10 @@ export default function MultiStepQuoteForm() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">
-        <h2 className="text-center text-xl  sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
-             Find Medicare coverage options that may meet your needs
-        </h2>
+      <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
+        Find Medicare coverage options that may meet your needs
+      </h2>
+
       {/* Progress Bar */}
       <div className="w-full max-w-lg mb-8">
         <div className="flex justify-between mb-2">
@@ -111,10 +108,7 @@ export default function MultiStepQuoteForm() {
         </div>
       </div>
 
-      <form
-        className="w-full max-w-xl items-center p-8 rounded-2xl"
-        onSubmit={handleSubmit}
-      >
+      <form className="w-full max-w-xl items-center p-8 rounded-2xl" onSubmit={handleSubmit}>
         {/* STEP 0 - Enrolled in Medicare */}
         {step === 0 && (
           <div className="text-center">
@@ -124,7 +118,7 @@ export default function MultiStepQuoteForm() {
             <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
               <button
                 type="button"
-                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg cursor-pointer shadow-lg hover:bg-blue-700 transition"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
                 onClick={() => {
                   setFormData((p) => ({ ...p, enrolled: true }));
                   setErrors({});
@@ -135,7 +129,7 @@ export default function MultiStepQuoteForm() {
               </button>
               <button
                 type="button"
-                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg cursor-pointer shadow-lg hover:bg-blue-700 transition"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
                 onClick={() => {
                   setFormData((p) => ({ ...p, enrolled: false }));
                   setErrors({});
@@ -154,10 +148,8 @@ export default function MultiStepQuoteForm() {
         {/* STEP 1 - Zip Code */}
         {step === 1 && (
           <div className="flex flex-col items-center w-full justify-center">
-            <h2 className="text-3xl font-bold mb-6 text-center">
-              Enter Your Zip Code
-            </h2>
-             <p className="text-gray-600 text-lg mb-6 text-center">
+            <h2 className="text-3xl font-bold mb-6 text-center">Enter Your Zip Code</h2>
+            <p className="text-gray-600 text-lg mb-6 text-center">
               We verify your information to provide accurate Zip code.
             </p>
 
@@ -169,9 +161,7 @@ export default function MultiStepQuoteForm() {
               placeholder="Zip Code"
               className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
             />
-            {errors.zip && (
-              <p className="text-red-500 text-sm mb-2">{errors.zip}</p>
-            )}
+            {errors.zip && <p className="text-red-500 text-sm mb-2">{errors.zip}</p>}
 
             {/* Next button */}
             <button
@@ -195,13 +185,11 @@ export default function MultiStepQuoteForm() {
           </div>
         )}
 
-        {/* STEP 2 - Contact Info */}
+        {/* STEP 2 - Contact Info + Consent Checkbox */}
         {step === 2 && (
           <div className="flex flex-col items-center w-full justify-center">
-            <h2 className="text-4xl font-bold mb-6 text-center">
-              What's your contact info?
-            </h2>
-           
+            <h2 className="text-4xl font-bold mb-6 text-center">What's your contact info?</h2>
+
             {/* Full Name */}
             <input
               type="text"
@@ -211,9 +199,7 @@ export default function MultiStepQuoteForm() {
               placeholder="Full Name"
               className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mb-2">{errors.name}</p>
-            )}
+            {errors.name && <p className="text-red-500 text-sm mb-2">{errors.name}</p>}
 
             {/* Email */}
             <input
@@ -224,9 +210,7 @@ export default function MultiStepQuoteForm() {
               placeholder="Email Address"
               className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mb-2">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
 
             {/* Phone Number */}
             <input
@@ -237,11 +221,33 @@ export default function MultiStepQuoteForm() {
               placeholder="Phone Number"
               className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
             />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mb-2">{errors.phone}</p>
-            )}
+            {errors.phone && <p className="text-red-500 text-sm mb-2">{errors.phone}</p>}
 
-            {/* Submit full width */}
+            {/* Consent Checkbox */}
+            <div className="flex items-start mt-4 mb-6">
+              <input
+                type="checkbox"
+                name="consent"
+                checked={formData.consent}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, consent: e.target.checked }))
+                }
+                className="mt-1 mr-3"
+              />
+              <label className="text-gray-700 text-sm">
+                By checking this box, I agree that QuoteBridgeHub and its marketing
+                Partners may contact me about Medicare plan options at the number and
+                email I provided using an automatic telephone dialing system or
+                prerecorded voice, text message, and email. My consent is not a
+                condition of purchase. Message and data rates may apply. I understand
+                my information may be used only as permitted by CMS rules and will not
+                be shared with other parties without my prior express written consent.
+                I may revoke my consent at any time.
+              </label>
+            </div>
+            {errors.consent && <p className="text-red-500 text-sm mb-2">{errors.consent}</p>}
+
+            {/* Submit button */}
             <button
               type="submit"
               className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
