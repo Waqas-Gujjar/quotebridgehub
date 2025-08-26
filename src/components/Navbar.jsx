@@ -10,7 +10,7 @@ const Navbar = () => {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-sm text-gray-600 mt-2 sm:mt-0 sm:ml-4 text-center sm:text-left">
+        <p className="text-sm text-gray-800 mt-2 sm:mt-0 sm:ml-4 text-center sm:text-left">
           - A non-government entity -
         </p>
       </div>

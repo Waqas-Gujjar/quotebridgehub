@@ -1,22 +1,23 @@
 import React, { useState } from "react";
+import Punchline from "./Punchline";
 
 export default function MultiStepQuoteForm() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     enrolled: null,
-    name: "",
     zip: "",
+    name: "",
     email: "",
     phone: "",
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
-  // ab 2 hi steps hain -> 50% aur 100%
-  const PROGRESS = [50, 100];
+  // Now 3 steps -> 0%, 50%, 100%
+  const PROGRESS = [0, 50, 100];
   const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
 
-  const next = () => setStep((s) => Math.min(s + 1, 1)); // sirf 0 -> 1
+  const next = () => setStep((s) => Math.min(s + 1, 2));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
   const onChange = (e) => {
@@ -29,9 +30,11 @@ export default function MultiStepQuoteForm() {
     if (step === 0 && formData.enrolled === null)
       newErrors.enrolled = "Please select an option";
 
-    if (step === 1) {
+    if (step === 1 && !formData.zip.trim())
+      newErrors.zip = "Zip code is required";
+
+    if (step === 2) {
       if (!formData.name.trim()) newErrors.name = "Name is required";
-      if (!formData.zip.trim()) newErrors.zip = "Zip code is required";
       if (!formData.email.trim()) newErrors.email = "Email is required";
       if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
     }
@@ -59,6 +62,8 @@ export default function MultiStepQuoteForm() {
   if (submitted) {
     return (
       <div className="flex flex-col items-center justify-center bg-gray-50 px-4">
+
+       
         {/* Progress Bar */}
         <div className="w-full max-w-lg mb-8">
           <div className="flex justify-between mb-2">
@@ -88,6 +93,9 @@ export default function MultiStepQuoteForm() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">
+        <h2 className="text-center text-xl  sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
+             Find Medicare coverage options that may meet your needs
+        </h2>
       {/* Progress Bar */}
       <div className="w-full max-w-lg mb-8">
         <div className="flex justify-between mb-2">
@@ -107,7 +115,7 @@ export default function MultiStepQuoteForm() {
         className="w-full max-w-xl items-center p-8 rounded-2xl"
         onSubmit={handleSubmit}
       >
-        {/* STEP 0 */}
+        {/* STEP 0 - Enrolled in Medicare */}
         {step === 0 && (
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-8">
@@ -143,16 +151,57 @@ export default function MultiStepQuoteForm() {
           </div>
         )}
 
-        {/* STEP 1 - Contact Form */}
+        {/* STEP 1 - Zip Code */}
         {step === 1 && (
           <div className="flex flex-col items-center w-full justify-center">
-            <h2 className="text-4xl font-bold mb-2 text-center">
-              What's your contact info?
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Enter Your Zip Code
             </h2>
-            <p className="text-gray-600 text-lg mb-6 text-center">
-              We verify your information to provide accurate local quotes.
+             <p className="text-gray-600 text-lg mb-6 text-center">
+              We verify your information to provide accurate Zip code.
             </p>
 
+            <input
+              type="text"
+              name="zip"
+              value={formData.zip}
+              onChange={onChange}
+              placeholder="Zip Code"
+              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+            />
+            {errors.zip && (
+              <p className="text-red-500 text-sm mb-2">{errors.zip}</p>
+            )}
+
+            {/* Next button */}
+            <button
+              type="button"
+              className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
+              onClick={Handlenext}
+            >
+              NEXT →
+            </button>
+
+            {/* Back button */}
+            <div className="mt-4">
+              <button
+                type="button"
+                className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
+                onClick={back}
+              >
+                ← BACK
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2 - Contact Info */}
+        {step === 2 && (
+          <div className="flex flex-col items-center w-full justify-center">
+            <h2 className="text-4xl font-bold mb-6 text-center">
+              What's your contact info?
+            </h2>
+           
             {/* Full Name */}
             <input
               type="text"
@@ -164,19 +213,6 @@ export default function MultiStepQuoteForm() {
             />
             {errors.name && (
               <p className="text-red-500 text-sm mb-2">{errors.name}</p>
-            )}
-
-            {/* Zip Code */}
-            <input
-              type="text"
-              name="zip"
-              value={formData.zip}
-              onChange={onChange}
-              placeholder="Zip Code"
-              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
-            />
-            {errors.zip && (
-              <p className="text-red-500 text-sm mb-2">{errors.zip}</p>
             )}
 
             {/* Email */}

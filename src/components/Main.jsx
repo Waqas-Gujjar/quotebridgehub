@@ -11,7 +11,7 @@ const Main = () => {
             <span className="text-blue-600 font-semibold text-2xl sm:text-3xl md:text-4xl">
               QuoteBridgeHub
             </span>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-gray-800">
               - A non-government entity -
             </p>
           </div>
@@ -26,7 +26,7 @@ const Main = () => {
       </div>
 
       {/* Disclaimer Content */}
-      <div className="w-full text-gray-600 text-sm px-4 sm:px-6 lg:px-12 py-8">
+      <div className="w-full text-gray-800 text-sm px-4 sm:px-6 lg:px-12 py-8">
         <div className="max-w-5xl mx-auto leading-relaxed space-y-4">
           <p>
             This advertisement is a solicitation to sell insurance, and is coming
@@ -34,52 +34,50 @@ const Main = () => {
             government agency.
           </p>
 
+          {/* 🔹 New Disclaimer Section Added */}
           <p>
-            QuoteBridgeHub.com is a referral source that provides information and
-            access to a helpline to match consumers with companies that may
-            provide certain insurance coverage to them. QuoteBridgeHub.com does not
-            act as an insurance broker and does not make decisions about insurance
-            coverage that may be available to you. QuoteBridgeHub.com doesn’t
-            promise a specific outcome or the results you may achieve by calling
-            the helpline. The helpline is free to call but the services or
-            programs that you pursue may have costs associated with them. Neither
-            QuoteBridgeHub.com nor any of the Medicare insurance plans to which you
-            may be connected to are endorsed by the U.S. Government or the federal
-            Medicare program. Calls placed to the helpline will ultimately be
-            transferred to a licensed agent who can enroll the caller into a new
-            plan.
+            QuoteBridgeHub.com is a referral service that provides information and
+            connects consumers with companies that may offer certain types of
+            insurance coverage. QuoteBridgeHub.com is not an insurance broker and
+            does not make decisions about insurance coverage. We do not guarantee
+            any specific outcome or results from contacting our helpline.
           </p>
 
           <p>
-            We do not offer every plan available in your area. Currently we
-            represent 73 organizations which offer 5,110 products in your area.
-            Please contact Medicare.gov or 1-800-MEDICARE or your local State
-            Health Insurance Program (SHIP) to get information on all of your
-            options.
+            Calling the helpline is free of charge; however, the services or
+            insurance programs you choose to pursue may involve costs. Neither
+            QuoteBridgeHub.com nor any Medicare insurance plans you may be
+            connected with are endorsed by the U.S. Government or the federal
+            Medicare program. Calls to the helpline may be transferred to a
+            licensed insurance agent who can provide information and, if you
+            choose, assist with enrollment.
+          </p>
+
+          <p className="font-semibold ">
+            We do not offer every plan available in your area. Currently, we
+            represent x organizations offering xx products in your area. For a
+            complete list of your options, please visit Medicare.gov, call
+            1-800-MEDICARE, or contact your local State Health Insurance Program
+            (SHIP).
           </p>
 
           <p>
             QuoteBridgeHub.com partners may not offer every plan available in your
-            area and participating sales agencies represent Medicare Advantage
-            HMO, PPO, PFFS and/or part D plan organizations that are contracted
-            with Medicare. Enrollment depends on the plan’s contract renewal.
+            area. Participating sales agencies represent Medicare Advantage HMO,
+            PPO, PFFS, and/or Part D plan organizations that are contracted with
+            Medicare. Enrollment in any plan depends on the plan’s contract
+            renewal.
           </p>
 
           <p>
-            By using this site, you acknowledge that you have read and agree to
-            the Terms of Service and Privacy Policy. We are committed to
-            protecting your privacy. If you do not want to share your information
-            please click on Do Not Sell My Personal Information for more details.
+            By using this site, you acknowledge that you have read and agree to our
+            Terms of Service and Privacy Policy. We are committed to protecting
+            your privacy. If you do not want to share your information, please
+            click on Do Not Sell My Personal Information for more details.
           </p>
+          {/* 🔹 End New Disclaimer Section */}
 
-          <p className="text-xs text-gray-500">
-            SMID# MULTI-PLAN_MLSlRp-La0106-CAS01-NON0_C
-          </p>
-
-          <p className="text-xs text-gray-500">
-            Copyright © 2025 QuoteBridgeHub.com, Owned by MediaLot LLC. All rights
-            reserved.
-          </p>
+        
         </div>
       </div>
     </>
