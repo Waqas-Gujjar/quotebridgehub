@@ -50,10 +50,75 @@ export default function MultiStepQuoteForm() {
     if (validateCurrentStep()) next();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateCurrentStep()) return;
-    // Redirect to Congratulations page
+    
+    // Debug TrustedForm availability
+    console.log('Window object keys:', Object.keys(window).filter(key => key.includes('trusted') || key.includes('Trusted')));
+    console.log('xxTrustedFormCertUrl:', window.xxTrustedFormCertUrl);
+    console.log('TrustedForm object:', window.TrustedForm);
+    
+    // Get TrustedForm certificate URL with multiple fallback methods
+    let trustedFormCertUrl = '';
+    
+    // Method 1: Direct window property
+    if (window.xxTrustedFormCertUrl) {
+      trustedFormCertUrl = window.xxTrustedFormCertUrl;
+    }
+    // Method 2: Check for TrustedForm object
+    else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === 'function') {
+      trustedFormCertUrl = window.TrustedForm.getCertUrl();
+    }
+    // Method 3: Check for hidden input field
+    else {
+      const trustedFormInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
+      if (trustedFormInput) {
+        trustedFormCertUrl = trustedFormInput.value;
+      }
+    }
+    
+    // Prepare data for Google Sheets
+    const submissionData = {
+      ...formData,
+      trustedFormCertUrl,
+      timestamp: new Date().toISOString(),
+      enrolled: formData.enrolled ? 'YES' : 'NO'
+    };
+    
+    // Print all form data to console
+    console.log('=== FORM SUBMISSION DATA ===');
+    console.log('Form Data:', formData);
+    console.log('Submission Data:', submissionData);
+    console.log('TrustedForm Certificate URL:', trustedFormCertUrl);
+    console.log('TrustedForm Debug Info:', {
+      windowProperty: window.xxTrustedFormCertUrl,
+      trustedFormObject: window.TrustedForm,
+      hiddenInput: document.querySelector('input[name="xxTrustedFormCertUrl"]')?.value
+    });
+    console.log('Timestamp:', new Date().toISOString());
+    console.log('============================');
+    
+    try {
+      // Send to Google Sheets via Google Apps Script Web App
+      const response = await fetch('https://script.google.com/macros/s/AKfycbxJx-THI2TMIq0x5SxVIUxCxYxj6h7eTR7_NVFrWzGbnrFCwHZgtvSGu_ZYJFPzRyBt/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData)
+      });
+      
+      if (response.ok) {
+        console.log('✅ Data sent to Google Sheets successfully');
+      } else {
+        console.error('❌ Failed to send data to Google Sheets');
+      }
+    } catch (error) {
+      console.error('❌ Error sending data:', error);
+    }
+    
+    // Redirect to Congratulations page regardless of Google Sheets result
     navigate("/congratulations");
   };
 
