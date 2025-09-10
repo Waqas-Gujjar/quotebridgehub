@@ -62,7 +62,7 @@ export default function MultiStepQuoteForm() {
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">
       <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
-        Find Medicare coverage options that may meet your needs
+        FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
       </h2>
 
       {/* Progress Bar */}

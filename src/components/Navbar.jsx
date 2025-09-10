@@ -27,22 +27,24 @@ const Navbar = () => {
         </div>
 
         {/* Contact CTA (right side) */}
-        <div className="mt-4 sm:mt-0 text-center sm:text-right">
-          <p className="text-base text-gray-800">
-            Need a quote? <span className="font-bold">Call toll free:</span>
-          </p>
-
-          <div className="flex items-center justify-center sm:justify-end space-x-2 mt-1">
-            <PhoneCall className="text-blue-600 w-6 h-6" />
-            <span className="text-lg font-semibold text-gray-900">
-              800-495-2740
-            </span>
-            <span className="text-gray-700">TTY: 711</span>
-          </div>
-
-          <p className="text-xs text-gray-500 mt-1">
-            Mon – Fri 9 AM – 5 PM EST
-          </p>
+        <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end">
+          <a 
+            href="tel:8004952740" 
+            className="flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2 shadow-lg transition-colors cursor-pointer"
+            aria-label="Call toll-free 800-495-2740"
+          >
+            <div className="bg-white rounded-full p-2 mr-3">
+              <PhoneCall className="text-blue-500 w-5 h-5" />
+            </div>
+            <div className="text-left">
+              <p className="text-xs font-medium uppercase tracking-wide">
+                CALL TOLL-FREE M-F 8AM-7PM CST
+              </p>
+              <p className="text-lg font-bold">
+                800-495-2740<span className="text-sm font-normal">(TTY 711)</span>
+              </p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
