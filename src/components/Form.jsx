@@ -1,131 +1,106 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+  import React, { useState } from "react";
+  import { useNavigate } from "react-router-dom";
 
-export default function MultiStepQuoteForm() {
-  const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    enrolled: null,
-    zip: "",
-    name: "",
-    email: "",
-    phone: "",
-    consent: false,
-  });
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-
-  // Steps progress: 0%, 50%, 100%
-  const PROGRESS = [0, 50, 100];
-  const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
-
-  const next = () => setStep((s) => Math.min(s + 1, 2));
-  const back = () => setStep((s) => Math.max(s - 1, 0));
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const validateCurrentStep = () => {
-    const newErrors = {};
-    if (step === 0 && formData.enrolled === null)
-      newErrors.enrolled = "Please select an option";
-
-    if (step === 1 && !formData.zip.trim())
-      newErrors.zip = "Zip code is required";
-
-    if (step === 2) {
-      if (!formData.name.trim()) newErrors.name = "Name is required";
-      if (!formData.email.trim()) newErrors.email = "Email is required";
-      if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-      if (!formData.consent) newErrors.consent = "You must agree to the consent";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const Handlenext = (e) => {
-    e?.preventDefault();
-    if (validateCurrentStep()) next();
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateCurrentStep()) return;
-    
-    // Debug TrustedForm availability
-    console.log('Window object keys:', Object.keys(window).filter(key => key.includes('trusted') || key.includes('Trusted')));
-    console.log('xxTrustedFormCertUrl:', window.xxTrustedFormCertUrl);
-    console.log('TrustedForm object:', window.TrustedForm);
-    
-    // Get TrustedForm certificate URL with multiple fallback methods
-    let trustedFormCertUrl = '';
-    
-    // Method 1: Direct window property
-    if (window.xxTrustedFormCertUrl) {
-      trustedFormCertUrl = window.xxTrustedFormCertUrl;
-    }
-    // Method 2: Check for TrustedForm object
-    else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === 'function') {
-      trustedFormCertUrl = window.TrustedForm.getCertUrl();
-    }
-    // Method 3: Check for hidden input field
-    else {
-      const trustedFormInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
-      if (trustedFormInput) {
-        trustedFormCertUrl = trustedFormInput.value;
-      }
-    }
-    
-    // Prepare data for Google Sheets
-    const submissionData = {
-      ...formData,
-      trustedFormCertUrl,
-      timestamp: new Date().toISOString(),
-      enrolled: formData.enrolled ? 'YES' : 'NO'
-    };
-    
-    // Print all form data to console
-    console.log('=== FORM SUBMISSION DATA ===');
-    console.log('Form Data:', formData);
-    console.log('Submission Data:', submissionData);
-    console.log('TrustedForm Certificate URL:', trustedFormCertUrl);
-    console.log('TrustedForm Debug Info:', {
-      windowProperty: window.xxTrustedFormCertUrl,
-      trustedFormObject: window.TrustedForm,
-      hiddenInput: document.querySelector('input[name="xxTrustedFormCertUrl"]')?.value
+  export default function MultiStepQuoteForm() {
+    const [step, setStep] = useState(0);
+    const [formData, setFormData] = useState({
+      enrolled: null,
+      zip: "",
+      name: "",
+      email: "",
+      phone: "",
+      consent: false,
     });
-    console.log('Timestamp:', new Date().toISOString());
-    console.log('============================');
-    
-    try {
-      // Send to Google Sheets using GET method with URL parameters (CORS-friendly)
-      const params = new URLSearchParams({
-        timestamp: submissionData.timestamp,
-        name: submissionData.name,
-        email: submissionData.email,
-        phone: submissionData.phone,
-        zip: submissionData.zip,
-        enrolled: submissionData.enrolled,
-        trustedFormCertUrl: submissionData.trustedFormCertUrl,
-        consent: submissionData.consent ? 'YES' : 'NO'
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+
+    // Steps progress: 0%, 50%, 100%
+    const PROGRESS = [0, 50, 100];
+    const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
+
+    const next = () => setStep((s) => Math.min(s + 1, 2));
+    const back = () => setStep((s) => Math.max(s - 1, 0));
+
+    const onChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const validateCurrentStep = () => {
+      const newErrors = {};
+      if (step === 0 && formData.enrolled === null)
+        newErrors.enrolled = "Please select an option";
+
+      if (step === 1 && !formData.zip.trim())
+        newErrors.zip = "Zip code is required";
+
+      if (step === 2) {
+        if (!formData.name.trim()) newErrors.name = "Name is required";
+        if (!formData.email.trim()) newErrors.email = "Email is required";
+        if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+        if (!formData.consent) newErrors.consent = "You must agree to the consent";
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    const Handlenext = (e) => {
+      e?.preventDefault();
+      if (validateCurrentStep()) next();
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!validateCurrentStep()) return;
+      
+      // Debug TrustedForm availability
+      console.log('Window object keys:', Object.keys(window).filter(key => key.includes('trusted') || key.includes('Trusted')));
+      console.log('xxTrustedFormCertUrl:', window.xxTrustedFormCertUrl);
+      console.log('TrustedForm object:', window.TrustedForm);
+      
+      // Get TrustedForm certificate URL with multiple fallback methods
+      let trustedFormCertUrl = '';
+      
+      // Method 1: Direct window property
+      if (window.xxTrustedFormCertUrl) {
+        trustedFormCertUrl = window.xxTrustedFormCertUrl;
+      }
+      // Method 2: Check for TrustedForm object
+      else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === 'function') {
+        trustedFormCertUrl = window.TrustedForm.getCertUrl();
+      }
+      // Method 3: Check for hidden input field
+      else {
+        const trustedFormInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
+        if (trustedFormInput) {
+          trustedFormCertUrl = trustedFormInput.value;
+        }
+      }
+      
+      // Prepare data for Google Sheets
+      const submissionData = {
+        ...formData,
+        trustedFormCertUrl,
+        timestamp: new Date().toISOString(),
+        enrolled: formData.enrolled ? 'YES' : 'NO'
+      };
+      
+      // Print all form data to console
+      console.log('=== FORM SUBMISSION DATA ===');
+      console.log('Form Data:', formData);
+      console.log('Submission Data:', submissionData);
+      console.log('TrustedForm Certificate URL:', trustedFormCertUrl);
+      console.log('TrustedForm Debug Info:', {
+        windowProperty: window.xxTrustedFormCertUrl,
+        trustedFormObject: window.TrustedForm,
+        hiddenInput: document.querySelector('input[name="xxTrustedFormCertUrl"]')?.value
       });
+      console.log('Timestamp:', new Date().toISOString());
+      console.log('============================');
       
-      const url = `https://script.google.com/macros/s/AKfycbxWAv1ZjZsitHVEZK8Pp5jMuNy3NasMer6QMHjSEBTggYMTplOi4E8adFG3da7mdluK/exec?${params}`;
-      
-      // Use fetch with no-cors mode or create an image request
-      const response = await fetch(url, {
-        method: 'GET',
-        mode: 'no-cors'
-      });
-      
-      console.log('✅ Data sent to Google Sheets successfully');
-    } catch (error) {
-      console.error('❌ Error sending data:', error);
-      
-      // Fallback: Use image request method (always works with CORS)
       try {
+        // Send to Google Sheets using GET method with URL parameters (CORS-friendly)
         const params = new URLSearchParams({
           timestamp: submissionData.timestamp,
           name: submissionData.name,
@@ -137,201 +112,226 @@ export default function MultiStepQuoteForm() {
           consent: submissionData.consent ? 'YES' : 'NO'
         });
         
-        const img = new Image();
-        img.src = `https://script.google.com/macros/s/AKfycbxWAv1ZjZsitHVEZK8Pp5jMuNy3NasMer6QMHjSEBTggYMTplOi4E8adFG3da7mdluK/exec?${params}`;
-        console.log('✅ Data sent via fallback method');
-      } catch (fallbackError) {
-        console.error('❌ Fallback method also failed:', fallbackError);
+        const url = `https://script.google.com/macros/s/AKfycbzBUEW1ZJcHZmTwlB1aQW95dBaCpS1bdz6ymJlDtQOBom0_ko-xHYWDjQ4R-yUsa4g/exec?${params}`;
+        
+        // Use fetch with no-cors mode or create an image request
+        const response = await fetch(url, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+        
+        console.log('✅ Data sent to Google Sheets successfully');
+      } catch (error) {
+        console.error('❌ Error sending data:', error);
+        
+        // Fallback: Use image request method (always works with CORS)
+        try {
+          const params = new URLSearchParams({
+            timestamp: submissionData.timestamp,
+            name: submissionData.name,
+            email: submissionData.email,
+            phone: submissionData.phone,
+            zip: submissionData.zip,
+            enrolled: submissionData.enrolled,
+            trustedFormCertUrl: submissionData.trustedFormCertUrl,
+            consent: submissionData.consent ? 'YES' : 'NO'
+          });
+          
+          const img = new Image();
+          img.src = `https://script.google.com/macros/s/AKfycbzBUEW1ZJcHZmTwlB1aQW95dBaCpS1bdz6ymJlDtQOBom0_ko-xHYWDjQ4R-yUsa4g/exec?${params}`;
+          console.log('✅ Data sent via fallback method');
+        } catch (fallbackError) {
+          console.error('❌ Fallback method also failed:', fallbackError);
+        }
       }
-    }
-    
-    // Redirect to Congratulations page regardless of Google Sheets result
-    navigate("/congratulations");
-  };
+      
+      // Redirect to Congratulations page regardless of Google Sheets result
+      navigate("/congratulations");
+    };
 
-  // After successful submit we navigate; no local submitted screen needed here
+    // After successful submit we navigate; no local submitted screen needed here
 
-  return (
-    <div className="flex flex-col items-center justify-center mt-12 px-4">
-      <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
-        FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
-      </h2>
+    return (
+      <div className="flex flex-col items-center justify-center mt-12 px-4">
+        <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
+          FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
+        </h2>
 
-      {/* Progress Bar */}
-      <div className="w-full max-w-lg mb-8">
-        <div className="flex justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">
-            {progress}% complete
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-blue-600 h-2 rounded-full transition-all"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-
-      <form className="w-full max-w-xl items-center p-8 rounded-2xl" onSubmit={handleSubmit}>
-        {/* STEP 0 - Enrolled in Medicare */}
-        {step === 0 && (
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-8">
-              Are you currently enrolled in Medicare Parts A & B?
-            </h2>
-            <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
-              <button
-                type="button"
-                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
-                onClick={() => {
-                  setFormData((p) => ({ ...p, enrolled: true }));
-                  setErrors({});
-                  next();
-                }}
-              >
-                YES
-              </button>
-              <button
-                type="button"
-                className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
-                onClick={() => {
-                  setFormData((p) => ({ ...p, enrolled: false }));
-                  setErrors({});
-                  next();
-                }}
-              >
-                NO
-              </button>
-              {errors.enrolled && (
-                <p className="text-red-500 text-sm mt-2">{errors.enrolled}</p>
-              )}
-            </div>
+        {/* Progress Bar */}
+        <div className="w-full max-w-lg mb-8">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              {progress}% complete
+            </span>
           </div>
-        )}
-
-        {/* STEP 1 - Zip Code */}
-        {step === 1 && (
-          <div className="flex flex-col items-center w-full justify-center">
-            <h2 className="text-3xl font-bold mb-6 text-center">Enter Your Zip Code</h2>
-            <p className="text-gray-600 text-lg mb-6 text-center">
-            We verify your information to provide accurate plan availability in your area.
-            </p>
-
-            <input
-              type="text"
-              name="zip"
-              value={formData.zip}
-              onChange={onChange}
-              placeholder="Zip Code"
-              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all"
+              style={{ width: `${progress}%` }}
             />
-            {errors.zip && <p className="text-red-500 text-sm mb-2">{errors.zip}</p>}
-
-            {/* Next button */}
-            <button
-              type="button"
-              className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
-              onClick={Handlenext}
-            >
-              NEXT →
-            </button>
-
-            {/* Back button */}
-            <div className="mt-4">
-              <button
-                type="button"
-                className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
-                onClick={back}
-              >
-                ← BACK
-              </button>
-            </div>
           </div>
-        )}
+        </div>
 
-        {/* STEP 2 - Contact Info + Consent Checkbox */}
-        {step === 2 && (
-          <div className="flex flex-col items-center w-full justify-center">
-            <h2 className="text-4xl font-bold mb-6 text-center">What's your contact info?</h2>
+        <form className="w-full max-w-xl items-center p-8 rounded-2xl" onSubmit={handleSubmit}>
+          {/* STEP 0 - Enrolled in Medicare */}
+          {step === 0 && (
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-8">
+                Are you currently enrolled in Medicare Parts A & B?
+              </h2>
+              <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
+                <button
+                  type="button"
+                  className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
+                  onClick={() => {
+                    setFormData((p) => ({ ...p, enrolled: true }));
+                    setErrors({});
+                    next();
+                  }}
+                >
+                  YES
+                </button>
+                <button
+                  type="button"
+                  className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
+                  onClick={() => {
+                    setFormData((p) => ({ ...p, enrolled: false }));
+                    setErrors({});
+                    next();
+                  }}
+                >
+                  NO
+                </button>
+                {errors.enrolled && (
+                  <p className="text-red-500 text-sm mt-2">{errors.enrolled}</p>
+                )}
+              </div>
+            </div>
+          )}
 
-            {/* Full Name */}
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={onChange}
-              placeholder="Full Name"
-              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
-            />
-            {errors.name && <p className="text-red-500 text-sm mb-2">{errors.name}</p>}
+          {/* STEP 1 - Zip Code */}
+          {step === 1 && (
+            <div className="flex flex-col items-center w-full justify-center">
+              <h2 className="text-3xl font-bold mb-6 text-center">Enter Your Zip Code</h2>
+              <p className="text-gray-600 text-lg mb-6 text-center">
+              We verify your information to provide accurate plan availability in your area.
+              </p>
 
-            {/* Email */}
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={onChange}
-              placeholder="Email Address"
-              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
-            />
-            {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
-
-            {/* Phone Number */}
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={onChange}
-              placeholder="Phone Number"
-              className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
-            />
-            {errors.phone && <p className="text-red-500 text-sm mb-2">{errors.phone}</p>}
-
-            {/* Consent Checkbox */}
-            <div className="flex items-start mt-4 mb-6">
               <input
-                type="checkbox"
-                name="consent"
-                checked={formData.consent}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, consent: e.target.checked }))
-                }
-                className="mt-1 mr-3"
+                type="text"
+                name="zip"
+                value={formData.zip}
+                onChange={onChange}
+                placeholder="Zip Code"
+                className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
               />
-              <label className="text-gray-700 text-sm">
-                By checking this box, I agree that QuoteBridgeHub and its marketing
-                Partners may contact me about Medicare plan options at the number and
-                email I provided using an automatic telephone dialing system or
-                prerecorded voice, text message, and email. My consent is not a
-                condition of purchase. Message and data rates may apply. I understand
-                my information may be used only as permitted by CMS rules and will not
-                be shared with other parties without my prior express written consent.
-                I may revoke my consent at any time.
-              </label>
-            </div>
-            {errors.consent && <p className="text-red-500 text-sm mb-2">{errors.consent}</p>}
+              {errors.zip && <p className="text-red-500 text-sm mb-2">{errors.zip}</p>}
 
-            {/* Submit button */}
-            <button
-              type="submit"
-              className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
-            >
-              SUBMIT →
-            </button>
-
-            {/* Back button */}
-            <div className="mt-4">
+              {/* Next button */}
               <button
                 type="button"
-                className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
-                onClick={back}
+                className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
+                onClick={Handlenext}
               >
-                ← BACK
+                NEXT →
               </button>
+
+              {/* Back button */}
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
+                  onClick={back}
+                >
+                  ← BACK
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-      </form>
-    </div>
-  );
-}
+          )}
+
+          {/* STEP 2 - Contact Info + Consent Checkbox */}
+          {step === 2 && (
+            <div className="flex flex-col items-center w-full justify-center">
+              <h2 className="text-4xl font-bold mb-6 text-center">What's your contact info?</h2>
+
+              {/* Full Name */}
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={onChange}
+                placeholder="Full Name"
+                className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+              />
+              {errors.name && <p className="text-red-500 text-sm mb-2">{errors.name}</p>}
+
+              {/* Email */}
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={onChange}
+                placeholder="Email Address"
+                className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+              />
+              {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
+
+              {/* Phone Number */}
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={onChange}
+                placeholder="Phone Number"
+                className="w-full border rounded-lg border-gray-300 px-5 outline-none py-4 mb-4"
+              />
+              {errors.phone && <p className="text-red-500 text-sm mb-2">{errors.phone}</p>}
+
+              {/* Consent Checkbox */}
+              <div className="flex items-start mt-4 mb-6">
+                <input
+                  type="checkbox"
+                  name="consent"
+                  checked={formData.consent}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, consent: e.target.checked }))
+                  }
+                  className="mt-1 mr-3"
+                />
+                <label className="text-gray-700 text-sm">
+                  By checking this box, I agree that QuoteBridgeHub and its marketing
+                  Partners may contact me about Medicare plan options at the number and
+                  email I provided using an automatic telephone dialing system or
+                  prerecorded voice, text message, and email. My consent is not a
+                  condition of purchase. Message and data rates may apply. I understand
+                  my information may be used only as permitted by CMS rules and will not
+                  be shared with other parties without my prior express written consent.
+                  I may revoke my consent at any time.
+                </label>
+              </div>
+              {errors.consent && <p className="text-red-500 text-sm mb-2">{errors.consent}</p>}
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
+              >
+                SUBMIT →
+              </button>
+
+              {/* Back button */}
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="flex items-start gap-2 font-semibold cursor-pointer text-gray-400 text-xl"
+                  onClick={back}
+                >
+                  ← BACK
+                </button>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+    );
+  }

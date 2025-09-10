@@ -12,8 +12,9 @@ function doGet(e) {
     // Get parameters from URL
     const params = e.parameter;
     
-    // Open your Google Sheet (replace with your sheet ID)
-    const sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+    // Open your Google Sheet
+    const spreadsheet = SpreadsheetApp.openById('AKfycbxWAv1ZjZsitHVEZK8Pp5jMuNy3NasMer6QMHjSEBTggYMTplOi4E8adFG3da7mdluK');
+    const sheet = spreadsheet.getSheetByName('quotebridgehub') || spreadsheet.getActiveSheet();
     
     // Add headers if this is the first row
     if (sheet.getLastRow() === 0) {
