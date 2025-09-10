@@ -7,41 +7,47 @@
 3. Replace the default code with this:
 
 ```javascript
-function doPost(e) {
+function doGet(e) {
   try {
-    // Get the data from the request
-    const data = JSON.parse(e.postData.contents);
+    // Get parameters from URL
+    const params = e.parameter;
     
     // Open your Google Sheet (replace with your sheet ID)
     const sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
     
     // Add headers if this is the first row
     if (sheet.getLastRow() === 0) {
-      sheet.getRange(1, 1, 1, 7).setValues([[
-        'Timestamp', 'Name', 'Email', 'Phone', 'Zip Code', 'Medicare Enrolled', 'TrustedForm Cert URL'
+      sheet.getRange(1, 1, 1, 8).setValues([[
+        'Timestamp', 'Name', 'Email', 'Phone', 'Zip Code', 'Medicare Enrolled', 'Consent', 'TrustedForm Cert URL'
       ]]);
     }
     
     // Add the form data to the sheet
     sheet.appendRow([
-      data.timestamp,
-      data.name,
-      data.email,
-      data.phone,
-      data.zip,
-      data.enrolled,
-      data.trustedFormCertUrl
+      params.timestamp || '',
+      params.name || '',
+      params.email || '',
+      params.phone || '',
+      params.zip || '',
+      params.enrolled || '',
+      params.consent || '',
+      params.trustedFormCertUrl || ''
     ]);
     
     return ContentService
-      .createTextOutput(JSON.stringify({success: true}))
-      .setMimeType(ContentService.MimeType.JSON);
+      .createTextOutput('Success')
+      .setMimeType(ContentService.MimeType.TEXT);
       
   } catch (error) {
     return ContentService
-      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
+      .createTextOutput('Error: ' + error.toString())
+      .setMimeType(ContentService.MimeType.TEXT);
   }
+}
+
+function doPost(e) {
+  // Fallback for POST requests - redirect to GET handler
+  return doGet(e);
 }
 ```
 

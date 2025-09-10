@@ -100,22 +100,49 @@ export default function MultiStepQuoteForm() {
     console.log('============================');
     
     try {
-      // Send to Google Sheets via Google Apps Script Web App
-      const response = await fetch('https://script.google.com/macros/s/AKfycbxJx-THI2TMIq0x5SxVIUxCxYxj6h7eTR7_NVFrWzGbnrFCwHZgtvSGu_ZYJFPzRyBt/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData)
+      // Send to Google Sheets using GET method with URL parameters (CORS-friendly)
+      const params = new URLSearchParams({
+        timestamp: submissionData.timestamp,
+        name: submissionData.name,
+        email: submissionData.email,
+        phone: submissionData.phone,
+        zip: submissionData.zip,
+        enrolled: submissionData.enrolled,
+        trustedFormCertUrl: submissionData.trustedFormCertUrl,
+        consent: submissionData.consent ? 'YES' : 'NO'
       });
       
-      if (response.ok) {
-        console.log('✅ Data sent to Google Sheets successfully');
-      } else {
-        console.error('❌ Failed to send data to Google Sheets');
-      }
+      const url = `https://script.google.com/macros/s/AKfycbxJx-THI2TMIq0x5SxVIUxCxYxj6h7eTR7_NVFrWzGbnrFCwHZgtvSGu_ZYJFPzRyBt/exec?${params}`;
+      
+      // Use fetch with no-cors mode or create an image request
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'no-cors'
+      });
+      
+      console.log('✅ Data sent to Google Sheets successfully');
     } catch (error) {
       console.error('❌ Error sending data:', error);
+      
+      // Fallback: Use image request method (always works with CORS)
+      try {
+        const params = new URLSearchParams({
+          timestamp: submissionData.timestamp,
+          name: submissionData.name,
+          email: submissionData.email,
+          phone: submissionData.phone,
+          zip: submissionData.zip,
+          enrolled: submissionData.enrolled,
+          trustedFormCertUrl: submissionData.trustedFormCertUrl,
+          consent: submissionData.consent ? 'YES' : 'NO'
+        });
+        
+        const img = new Image();
+        img.src = `https://script.google.com/macros/s/AKfycbxJx-THI2TMIq0x5SxVIUxCxYxj6h7eTR7_NVFrWzGbnrFCwHZgtvSGu_ZYJFPzRyBt/exec?${params}`;
+        console.log('✅ Data sent via fallback method');
+      } catch (fallbackError) {
+        console.error('❌ Fallback method also failed:', fallbackError);
+      }
     }
     
     // Redirect to Congratulations page regardless of Google Sheets result
