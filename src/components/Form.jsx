@@ -112,7 +112,7 @@ export default function MultiStepQuoteForm() {
         consent: submissionData.consent ? 'YES' : 'NO'
       });
       
-      const url = `https://script.google.com/macros/s/AKfycbylEyysE-M3gCoPDRYDBUkSyGd3ma9z7fjIABIDyMi6viITlGDxrLDFCK2Y6tWgzpff/exec?${params}`;
+      const url = `https://script.google.com/macros/s/AKfycbxWAv1ZjZsitHVEZK8Pp5jMuNy3NasMer6QMHjSEBTggYMTplOi4E8adFG3da7mdluK/exec?${params}`;
       
       // Use fetch with no-cors mode or create an image request
       const response = await fetch(url, {
@@ -138,7 +138,7 @@ export default function MultiStepQuoteForm() {
         });
         
         const img = new Image();
-        img.src = `https://script.google.com/macros/s/AKfycbylEyysE-M3gCoPDRYDBUkSyGd3ma9z7fjIABIDyMi6viITlGDxrLDFCK2Y6tWgzpff/exec?${params}`;
+        img.src = `https://script.google.com/macros/s/AKfycbxWAv1ZjZsitHVEZK8Pp5jMuNy3NasMer6QMHjSEBTggYMTplOi4E8adFG3da7mdluK/exec?${params}`;
         console.log('✅ Data sent via fallback method');
       } catch (fallbackError) {
         console.error('❌ Fallback method also failed:', fallbackError);
