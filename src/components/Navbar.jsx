@@ -41,7 +41,7 @@ const Navbar = () => {
                 CALL TOLL-FREE M-F 8AM-7PM CST
               </p>
               <p className="text-lg font-bold">
-                800-495-2740<span className="text-sm font-normal">(TTY 711)</span>
+                800-495-2740
               </p>
             </div>
           </a>
