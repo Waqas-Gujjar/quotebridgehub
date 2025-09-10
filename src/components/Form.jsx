@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MultiStepQuoteForm() {
   const [step, setStep] = useState(0);
@@ -11,7 +12,7 @@ export default function MultiStepQuoteForm() {
     consent: false,
   });
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   // Steps progress: 0%, 50%, 100%
   const PROGRESS = [0, 50, 100];
@@ -52,40 +53,11 @@ export default function MultiStepQuoteForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateCurrentStep()) return;
-    setSubmitted(true);
-
-    // Optional page refresh after submission
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    // Redirect to Congratulations page
+    navigate("/congratulations");
   };
 
-  if (submitted) {
-    return (
-      <div className="flex flex-col items-center justify-center bg-gray-50 px-4">
-        {/* Progress Bar */}
-        <div className="w-full max-w-lg mb-8">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              100% complete
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-blue-600 h-2 rounded-full" style={{ width: `100%` }} />
-          </div>
-        </div>
-
-        <div className="bg-white p-8 rounded-2xl shadow text-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-2">
-            🎉 Form Submitted!
-          </h2>
-          <p className="text-gray-600">
-            Thank you for your submission. Page will refresh shortly...
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // After successful submit we navigate; no local submitted screen needed here
 
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">
@@ -150,7 +122,7 @@ export default function MultiStepQuoteForm() {
           <div className="flex flex-col items-center w-full justify-center">
             <h2 className="text-3xl font-bold mb-6 text-center">Enter Your Zip Code</h2>
             <p className="text-gray-600 text-lg mb-6 text-center">
-              We verify your information to provide accurate Zip code.
+            We verify your information to provide accurate plan availability in your area.
             </p>
 
             <input

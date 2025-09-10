@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import TermsConditions from './components/TermsConditions'
 import Privacy from './components/Privacy'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Congratulations from './components/Congratulations'
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/" element={<><Form /><Main /></>} />
         <Route path="/TermsConditions" element={<TermsConditions />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/congratulations" element={<Congratulations />} />
         {/* <Route path="/do-not-sell" element={<DoNotSell />} /> */}
       </Routes>
       <div className='mt-5'>
