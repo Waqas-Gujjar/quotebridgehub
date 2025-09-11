@@ -57,7 +57,8 @@
       if (!validateCurrentStep()) return;
       setSubmitError("");
       setIsSubmitting(true);
-    
+
+      try {
       // TrustedForm certificate check
       let trustedFormCertUrl = "";
       if (window.xxTrustedFormCertUrl) {
