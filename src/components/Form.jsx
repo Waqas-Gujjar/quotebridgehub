@@ -12,6 +12,8 @@
       consent: false,
     });
     const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
     const navigate = useNavigate();
 
     // Steps progress: 0%, 50%, 100%
@@ -53,6 +55,8 @@
     const handleSubmit = async (e) => {
       e.preventDefault();
       if (!validateCurrentStep()) return;
+      setSubmitError("");
+      setIsSubmitting(true);
     
       // TrustedForm certificate check
       let trustedFormCertUrl = "";
@@ -61,53 +65,35 @@
       } else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === "function") {
         trustedFormCertUrl = window.TrustedForm.getCertUrl();
       } else {
-        const trustedFormInput = document.querySelector(
-          'input[name="xxTrustedFormCertUrl"]'
-        );
+        const trustedFormInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
         if (trustedFormInput) {
           trustedFormCertUrl = trustedFormInput.value;
         }
       }
-    
-      // Ab data Google Sheet per bhejna hai
-      try {
-        const response = await fetch(
-          "https://script.google.com/macros/s/AKfycbwW3ANf2zRyf8ZJgZ9-hXpg6A8qupc3LFQnTvWYeaV6nb_zP7KI4e9DA9HYrWXJOEfK3w/exec",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              zip: formData.zip,
-              enrolled: formData.enrolled,
-              consent: formData.consent,
-              trustedFormCertUrl: trustedFormCertUrl,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-    
-        const result = await response.json();
-        console.log("Google Sheet Response:", result);
-    
-        // Agar sab sahi ho gaya tu congratulations page
-        navigate("/congratulations");
-      } catch (error) {
-        console.error("Error saving to Google Sheet:", error);
-      }
-    };
-    
 
-    // After successful submit we navigate; no local submitted screen needed here
+      // Log locally (no external request to avoid CORS)
+      console.log("FORM SUBMISSION (no external send):", {
+        ...formData,
+        trustedFormCertUrl,
+        timestamp: new Date().toISOString(),
+      });
 
-    return (
-      <div className="flex flex-col items-center justify-center mt-12 px-4">
-        <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
-          FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
-        </h2>
+      // Navigate to congratulations
+      navigate("/congratulations");
+    } catch (error) {
+      console.error("Submission error:", error);
+      setSubmitError("There was an unexpected error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // After successful submit we navigate; no local submitted screen needed here
+  return (
+    <div className="flex flex-col items-center justify-center mt-12 px-4">
+      <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
+        FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
+      </h2>
 
         {/* Progress Bar */}
         <div className="w-full max-w-lg mb-8">
@@ -266,10 +252,14 @@
               {/* Submit button */}
               <button
                 type="submit"
-                className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700"
+                disabled={isSubmitting}
+                className="w-full py-5 cursor-pointer rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                SUBMIT →
+                {isSubmitting ? "Submitting..." : "SUBMIT →"}
               </button>
+              {submitError && (
+                <p className="text-red-600 text-sm mt-3 text-center">{submitError}</p>
+              )}
 
               {/* Back button */}
               <div className="mt-4">
