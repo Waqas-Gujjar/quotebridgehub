@@ -53,101 +53,53 @@
     const handleSubmit = async (e) => {
       e.preventDefault();
       if (!validateCurrentStep()) return;
-      
-      // Debug TrustedForm availability
-      console.log('Window object keys:', Object.keys(window).filter(key => key.includes('trusted') || key.includes('Trusted')));
-      console.log('xxTrustedFormCertUrl:', window.xxTrustedFormCertUrl);
-      console.log('TrustedForm object:', window.TrustedForm);
-      
-      // Get TrustedForm certificate URL with multiple fallback methods
-      let trustedFormCertUrl = '';
-      
-      // Method 1: Direct window property
+    
+      // TrustedForm certificate check
+      let trustedFormCertUrl = "";
       if (window.xxTrustedFormCertUrl) {
         trustedFormCertUrl = window.xxTrustedFormCertUrl;
-      }
-      // Method 2: Check for TrustedForm object
-      else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === 'function') {
+      } else if (window.TrustedForm && typeof window.TrustedForm.getCertUrl === "function") {
         trustedFormCertUrl = window.TrustedForm.getCertUrl();
-      }
-      // Method 3: Check for hidden input field
-      else {
-        const trustedFormInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
+      } else {
+        const trustedFormInput = document.querySelector(
+          'input[name="xxTrustedFormCertUrl"]'
+        );
         if (trustedFormInput) {
           trustedFormCertUrl = trustedFormInput.value;
         }
       }
-      
-      // Prepare data for Google Sheets
-      const submissionData = {
-        ...formData,
-        trustedFormCertUrl,
-        timestamp: new Date().toISOString(),
-        enrolled: formData.enrolled ? 'YES' : 'NO'
-      };
-      
-      // Print all form data to console
-      console.log('=== FORM SUBMISSION DATA ===');
-      console.log('Form Data:', formData);
-      console.log('Submission Data:', submissionData);
-      console.log('TrustedForm Certificate URL:', trustedFormCertUrl);
-      console.log('TrustedForm Debug Info:', {
-        windowProperty: window.xxTrustedFormCertUrl,
-        trustedFormObject: window.TrustedForm,
-        hiddenInput: document.querySelector('input[name="xxTrustedFormCertUrl"]')?.value
-      });
-      console.log('Timestamp:', new Date().toISOString());
-      console.log('============================');
-      
+    
+      // Ab data Google Sheet per bhejna hai
       try {
-        // Send to Google Sheets using GET method with URL parameters (CORS-friendly)
-        const params = new URLSearchParams({
-          timestamp: submissionData.timestamp,
-          name: submissionData.name,
-          email: submissionData.email,
-          phone: submissionData.phone,
-          zip: submissionData.zip,
-          enrolled: submissionData.enrolled,
-          trustedFormCertUrl: submissionData.trustedFormCertUrl,
-          consent: submissionData.consent ? 'YES' : 'NO'
-        });
-        
-        const url = `https://script.google.com/macros/s/AKfycbzBUEW1ZJcHZmTwlB1aQW95dBaCpS1bdz6ymJlDtQOBom0_ko-xHYWDjQ4R-yUsa4g/exec?${params}`;
-        
-        // Use fetch with no-cors mode or create an image request
-        const response = await fetch(url, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-        
-        console.log('✅ Data sent to Google Sheets successfully');
+        const response = await fetch(
+          "https://script.google.com/macros/s/AKfycbwW3ANf2zRyf8ZJgZ9-hXpg6A8qupc3LFQnTvWYeaV6nb_zP7KI4e9DA9HYrWXJOEfK3w/exec",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              zip: formData.zip,
+              enrolled: formData.enrolled,
+              consent: formData.consent,
+              trustedFormCertUrl: trustedFormCertUrl,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+    
+        const result = await response.json();
+        console.log("Google Sheet Response:", result);
+    
+        // Agar sab sahi ho gaya tu congratulations page
+        navigate("/congratulations");
       } catch (error) {
-        console.error('❌ Error sending data:', error);
-        
-        // Fallback: Use image request method (always works with CORS)
-        try {
-          const params = new URLSearchParams({
-            timestamp: submissionData.timestamp,
-            name: submissionData.name,
-            email: submissionData.email,
-            phone: submissionData.phone,
-            zip: submissionData.zip,
-            enrolled: submissionData.enrolled,
-            trustedFormCertUrl: submissionData.trustedFormCertUrl,
-            consent: submissionData.consent ? 'YES' : 'NO'
-          });
-          
-          const img = new Image();
-          img.src = `https://script.google.com/macros/s/AKfycbzBUEW1ZJcHZmTwlB1aQW95dBaCpS1bdz6ymJlDtQOBom0_ko-xHYWDjQ4R-yUsa4g/exec?${params}`;
-          console.log('✅ Data sent via fallback method');
-        } catch (fallbackError) {
-          console.error('❌ Fallback method also failed:', fallbackError);
-        }
+        console.error("Error saving to Google Sheet:", error);
       }
-      
-      // Redirect to Congratulations page regardless of Google Sheets result
-      navigate("/congratulations");
     };
+    
 
     // After successful submit we navigate; no local submitted screen needed here
 

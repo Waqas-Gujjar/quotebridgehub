@@ -38,7 +38,7 @@ const Navbar = () => {
             </div>
             <div className="text-left">
               <p className="text-xs font-medium uppercase tracking-wide">
-                CALL TOLL-FREE M-F 8AM-7PM CST
+                CALL  M-F 9AM-5PM EST
               </p>
               <p className="text-lg font-bold">
                 800-495-2740

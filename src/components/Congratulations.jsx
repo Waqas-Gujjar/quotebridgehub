@@ -37,7 +37,7 @@ export default function Congratulations() {
                   </span>
                   <div className="text-center">
                     <div className="text-2xl font-extrabold tracking-wide">800-495-2740</div>
-                    <div className="text-[12px] sm:text-sm opacity-95 font-semibold">CLICK TO CALL TOLL-FREE</div>
+                    <div className="text-[12px] sm:text-sm opacity-95 font-semibold">CLICK TO CALL </div>
                   </div>
                 </div>
               </div>
