@@ -1,65 +1,94 @@
-  import React, { useState } from "react";
-  import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-  export default function MultiStepQuoteForm() {
-    const [step, setStep] = useState(0);
-    const [formData, setFormData] = useState({
-      enrolled: null,
-      zip: "",
-      name: "",
-      email: "",
-      phone: "",
-      consent: false,
-    });
-    const [errors, setErrors] = useState({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState("");
-    const navigate = useNavigate();
-
-    // Steps progress: 0%, 50%, 100%
-    const PROGRESS = [0, 50, 100];
-    const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
-
-    const next = () => setStep((s) => Math.min(s + 1, 2));
-    const back = () => setStep((s) => Math.max(s - 1, 0));
-
-    const onChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const validateCurrentStep = () => {
-      const newErrors = {};
-      if (step === 0 && formData.enrolled === null)
-        newErrors.enrolled = "Please select an option";
-
-      if (step === 1 && !formData.zip.trim())
-        newErrors.zip = "Zip code is required";
-
-      if (step === 2) {
-        if (!formData.name.trim()) newErrors.name = "Name is required";
-        if (!formData.email.trim()) newErrors.email = "Email is required";
-        if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-        if (!formData.consent) newErrors.consent = "You must agree to the consent";
-      }
-
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    };
-
-    const Handlenext = (e) => {
-      e?.preventDefault();
-      if (validateCurrentStep()) next();
-    };
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (!validateCurrentStep()) return;
-      setSubmitError("");
-      setIsSubmitting(true);
-
+export default function MultiStepQuoteForm() {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    enrolled: null,
+    zip: "",
+    name: "",
+    email: "",
+    phone: "",
+    consent: false,
+    ip: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const navigate = useNavigate();
+  
+  // Capture user's public IP address on mount
+  useEffect(() => {
+    let isMounted = true;
+    const fetchIP = async () => {
       try {
-      // TrustedForm certificate check
+        const res = await fetch("https://api.ipify.org?format=json");
+        if (!res.ok) throw new Error("ipify fetch failed");
+        const data = await res.json();
+        if (isMounted && data?.ip) {
+          setFormData((prev) => ({ ...prev, ip: data.ip }));
+        }
+      } catch (e) {
+        try {
+          const res2 = await fetch("https://ifconfig.co/json", { headers: { Accept: "application/json" } });
+          if (res2.ok) {
+            const d2 = await res2.json();
+            if (isMounted && d2?.ip) {
+              setFormData((prev) => ({ ...prev, ip: d2.ip }));
+            }
+          }
+        } catch {}
+      }
+    };
+    fetchIP();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Steps progress: 0%, 50%, 100%
+  const PROGRESS = [0, 50, 100];
+  const progress = PROGRESS[Math.min(step, PROGRESS.length - 1)];
+
+  const next = () => setStep((s) => Math.min(s + 1, 2));
+  const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateCurrentStep = () => {
+    const newErrors = {};
+    if (step === 0 && formData.enrolled === null)
+      newErrors.enrolled = "Please select an option";
+
+    if (step === 1 && !formData.zip.trim())
+      newErrors.zip = "Zip code is required";
+
+    if (step === 2) {
+      if (!formData.name.trim()) newErrors.name = "Name is required";
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+      if (!formData.consent) newErrors.consent = "You must agree to the consent";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const Handlenext = (e) => {
+    e?.preventDefault();
+    if (validateCurrentStep()) next();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateCurrentStep()) return;
+    setSubmitError("");
+    setIsSubmitting(true);
+  
+    try {
       let trustedFormCertUrl = "";
       if (window.xxTrustedFormCertUrl) {
         trustedFormCertUrl = window.xxTrustedFormCertUrl;
@@ -71,16 +100,25 @@
           trustedFormCertUrl = trustedFormInput.value;
         }
       }
-
-      // Log locally (no external request to avoid CORS)
-      console.log("FORM SUBMISSION (no external send):", {
+  
+      const formBody = new URLSearchParams();
+      Object.entries({
         ...formData,
         trustedFormCertUrl,
-        timestamp: new Date().toISOString(),
+      }).forEach(([key, value]) => formBody.append(key, value));
+  
+      const scriptURL = "https://script.google.com/macros/s/AKfycbx4-CJVt6Rcx4PXCmCl5zZEcKy530z8c7BpaT8xUnNlI603eZNyZ9HDCqCvIEhF1ubLBw/exe"; // Google Apps Script URL paste karo
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: formBody,
       });
-
-      // Navigate to congratulations
-      navigate("/congratulations");
+  
+      const result = await res.json();
+      if (result.status === "ok") {
+        navigate("/congratulations");
+      } else {
+        setSubmitError("Google Sheet error: " + (result.message || "Unknown error"));
+      }
     } catch (error) {
       console.error("Submission error:", error);
       setSubmitError("There was an unexpected error. Please try again.");
@@ -88,7 +126,7 @@
       setIsSubmitting(false);
     }
   };
-
+  
   // After successful submit we navigate; no local submitted screen needed here
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">

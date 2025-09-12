@@ -21,7 +21,7 @@ export default function Congratulations() {
               className="block mt-6"
               aria-label="Click to call toll-free 800-495-2740"
             >
-              <div className="relative overflow-hidden bg-red-600 hover:bg-red-700 transition-colors text-white rounded-lg shadow-xl px-4 sm:px-5 py-4 sm:py-5">
+              <div className="relative overflow-hidden bg-blue-600 hover:bg-blue-700 transition-colors text-white rounded-lg shadow-xl px-4 sm:px-5 py-4 sm:py-5 neon-call">
                 <div className="flex items-center justify-center gap-3">
                   <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15">
                     {/* Phone Icon */}
