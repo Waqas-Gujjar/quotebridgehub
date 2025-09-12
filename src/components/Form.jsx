@@ -107,10 +107,13 @@ export default function MultiStepQuoteForm() {
         trustedFormCertUrl,
       }).forEach(([key, value]) => formBody.append(key, value));
   
-      const scriptURL = "https://script.google.com/macros/s/AKfycbx4-CJVt6Rcx4PXCmCl5zZEcKy530z8c7BpaT8xUnNlI603eZNyZ9HDCqCvIEhF1ubLBw/exe"; // Google Apps Script URL paste karo
+      const scriptURL = "https://script.google.com/macros/s/AKfycbx4-CJVt6Rcx4PXCmCl5zZEcKy530z8c7BpaT8xUnNlI603eZNyZ9HDCqCvIEhF1ubLBw/exehttps://script.google.com/macros/s/AKfycbyK9153u7gFmmH5lR0XTOH9ZXnJxTRj_pWO3z7e9dQfmuZ4BLwbLvqz5B16IjnlVyFqPA/exec"; // Google Apps Script URL paste karo
       const res = await fetch(scriptURL, {
         method: "POST",
         body: formBody,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
       });
   
       const result = await res.json();
