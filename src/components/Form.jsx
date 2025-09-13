@@ -86,7 +86,7 @@ export default function MultiStepQuoteForm() {
     if (validateCurrentStep()) next();
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
   if (!validateCurrentStep()) return;
   setSubmitError("");
@@ -110,16 +110,10 @@ export default function MultiStepQuoteForm() {
       }
     }
 
-    // ✅ Google Script URL
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycbwyK82fHTcr8bdVn-YzJQw4TDuQQcScUGhKUp7GXgftG90B6Gs8Y05mT82RYpOlEauGlw/exec";
+    const scriptURL ='https://script.google.com/macros/s/AKfycbzefWrYuB8qXhJ3HKQg0AtAxGAYdrp7tLP6qpZ2Hey0S5z_7q2Wk9rvz86JmDi71QYn/exec';
 
-    // ✅ Proxy URL
-    const proxyURL = "https://corsproxy.io/?";
-
-    // ✅ Final Request through Proxy
     const response = await axios.post(
-      proxyURL + encodeURIComponent(scriptURL),
+      scriptURL,
       {
         ...formData,
         trustedFormCertUrl,
@@ -146,6 +140,7 @@ export default function MultiStepQuoteForm() {
     setIsSubmitting(false);
   }
 };
+
 
 
 
