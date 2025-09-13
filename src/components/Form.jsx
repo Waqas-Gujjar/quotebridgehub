@@ -110,29 +110,26 @@ const handleSubmit = async (e) => {
       }
     }
 
-    const scriptURL ='https://script.google.com/macros/s/AKfycbzefWrYuB8qXhJ3HKQg0AtAxGAYdrp7tLP6qpZ2Hey0S5z_7q2Wk9rvz86JmDi71QYn/exec';
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbwqqGIPpamYegFslxYuoQ9fR0iaLOIdFiGeHIOcWJhJS10pUHrS_VsQu4v1Oj2AnMkr/exec";
 
-    const response = await axios.post(
-      scriptURL,
-      {
-        ...formData,
-        trustedFormCertUrl,
+    const payload = {
+      ...formData,
+      trustedFormCertUrl,
+    };
+
+    // 👇 no-cors fetch
+    await fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      body: JSON.stringify(payload),
+    });
 
-    if (response.data.status === "success" || response.data.status === "ok") {
-      navigate("/congratulations");
-    } else {
-      setSubmitError(
-        "Google Sheet error: " +
-          (response.data.message || "Unknown error")
-      );
-    }
+    // ✅ Data Google Sheet me chala jayega
+    navigate("/congratulations");
   } catch (error) {
     console.error("Submission error:", error);
     setSubmitError("There was an unexpected error. Please try again.");
@@ -140,8 +137,6 @@ const handleSubmit = async (e) => {
     setIsSubmitting(false);
   }
 };
-
-
 
 
   // After successful submit we navigate; no local submitted screen needed here

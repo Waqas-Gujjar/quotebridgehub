@@ -2,13 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/image/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QuoteBridgeHub</title>
-    <script type="module" crossorigin src="/assets/index-Brfv76TQ.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CKMd2Gl4.css">
+    
+    <!-- TrustedForm -->
+    <script type="text/javascript">
+      (function() {
+        var tf = document.createElement('script');
+        tf.type = 'text/javascript';
+        tf.async = true;
+        tf.src = ("https:" == document.location.protocol ? 'https' : 'http') +
+          '://api.trustedform.com/trustedform.js?field=xxTrustedFormCertUrl&use_tagged_consent=true&l=' +
+          new Date().getTime() + Math.random();
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tf, s);
+        
+        // Debug TrustedForm loading
+        tf.onload = function() {
+          console.log('TrustedForm script loaded successfully');
+          setTimeout(function() {
+            console.log('TrustedForm certificate URL after load:', window.xxTrustedFormCertUrl);
+          }, 1000);
+        };
+        
+        tf.onerror = function() {
+          console.error('Failed to load TrustedForm script');
+        };
+      })();
+    </script>
+    <!-- End TrustedForm -->
+    <script type="module" crossorigin src="/assets/index-BWYJGHKl.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CVIsSo1c.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
