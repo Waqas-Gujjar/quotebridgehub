@@ -87,61 +87,67 @@ export default function MultiStepQuoteForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateCurrentStep()) return;
-    setSubmitError("");
-    setIsSubmitting(true);
+  e.preventDefault();
+  if (!validateCurrentStep()) return;
+  setSubmitError("");
+  setIsSubmitting(true);
 
-    try {
-      let trustedFormCertUrl = "";
-      if (window.xxTrustedFormCertUrl) {
-        trustedFormCertUrl = window.xxTrustedFormCertUrl;
-      } else if (
-        window.TrustedForm &&
-        typeof window.TrustedForm.getCertUrl === "function"
-      ) {
-        trustedFormCertUrl = window.TrustedForm.getCertUrl();
-      } else {
-        const trustedFormInput = document.querySelector(
-          'input[name="xxTrustedFormCertUrl"]'
-        );
-        if (trustedFormInput) {
-          trustedFormCertUrl = trustedFormInput.value;
-        }
-      }
-
-      // ✅ Axios POST request
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxc4whHPq_E3M6Twi3mgotQJqanNh9Eyln2HViW3UJ5ogw1MCApRWNyBKZJV2aAYYJVrA/exec"
-
-      const response = await axios.post(
-        scriptURL,
-        {
-          ...formData,
-          trustedFormCertUrl,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            'mode': "no-cors",
-          },
-        }
+  try {
+    let trustedFormCertUrl = "";
+    if (window.xxTrustedFormCertUrl) {
+      trustedFormCertUrl = window.xxTrustedFormCertUrl;
+    } else if (
+      window.TrustedForm &&
+      typeof window.TrustedForm.getCertUrl === "function"
+    ) {
+      trustedFormCertUrl = window.TrustedForm.getCertUrl();
+    } else {
+      const trustedFormInput = document.querySelector(
+        'input[name="xxTrustedFormCertUrl"]'
       );
-
-      if (response.data.status === "success" || response.data.status === "ok") {
-        navigate("/congratulations");
-      } else {
-        setSubmitError(
-          "Google Sheet error: " +
-            (response.data.message || "Unknown error")
-        );
+      if (trustedFormInput) {
+        trustedFormCertUrl = trustedFormInput.value;
       }
-    } catch (error) {
-      console.error("Submission error:", error);
-      setSubmitError("There was an unexpected error. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    // ✅ Google Script URL
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbwyK82fHTcr8bdVn-YzJQw4TDuQQcScUGhKUp7GXgftG90B6Gs8Y05mT82RYpOlEauGlw/exec";
+
+    // ✅ Proxy URL
+    const proxyURL = "https://corsproxy.io/?";
+
+    // ✅ Final Request through Proxy
+    const response = await axios.post(
+      proxyURL + encodeURIComponent(scriptURL),
+      {
+        ...formData,
+        trustedFormCertUrl,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.data.status === "success" || response.data.status === "ok") {
+      navigate("/congratulations");
+    } else {
+      setSubmitError(
+        "Google Sheet error: " +
+          (response.data.message || "Unknown error")
+      );
+    }
+  } catch (error) {
+    console.error("Submission error:", error);
+    setSubmitError("There was an unexpected error. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
 
   // After successful submit we navigate; no local submitted screen needed here
   return (
