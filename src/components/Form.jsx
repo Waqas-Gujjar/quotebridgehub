@@ -111,8 +111,7 @@ export default function MultiStepQuoteForm() {
       }
 
       // ✅ Axios POST request
-      const scriptURL =
-        "https://script.google.com/macros/s/AKfycbyO9uF_mCzdVR7jlLDbg9HXf6t5kScCs1QbYjWWS9MuKIyMm6YNWhWehEKTG1Cnyh2sig/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxc4whHPq_E3M6Twi3mgotQJqanNh9Eyln2HViW3UJ5ogw1MCApRWNyBKZJV2aAYYJVrA/exec"
 
       const response = await axios.post(
         scriptURL,
@@ -123,6 +122,7 @@ export default function MultiStepQuoteForm() {
         {
           headers: {
             "Content-Type": "application/json",
+            'mode': "no-cors",
           },
         }
       );
