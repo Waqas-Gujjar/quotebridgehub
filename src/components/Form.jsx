@@ -142,7 +142,7 @@ const handleSubmit = async (e) => {
   // After successful submit we navigate; no local submitted screen needed here
   return (
     <div className="flex flex-col items-center justify-center mt-12 px-4">
-      <h2 className="text-center text-4xl sm:text-2xl md:text-4xl font-semibold text-gray-800 mb-6">
+      <h2 className="text-center text-4xl sm:text-1xl md:text-2xl font-semibold text-gray-800 mb-6">
         FIND YOUR MEDICARE COVERAGE OPTIONS THAT MAY MEET YOUR NEEDS
       </h2>
 

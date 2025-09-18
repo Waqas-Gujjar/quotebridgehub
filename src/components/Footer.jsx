@@ -7,7 +7,7 @@ const Footer = () => {
         
         {/* Copyright */}
         <p className="text-center sm:text-left">
-          © 2025 QuoteBridgeHub.com, Owned by Fluxa Growth LLC. All rights reserved.
+          © 2025 QuoteBridgeHub.com
         </p>
 
         {/* Footer Links */}

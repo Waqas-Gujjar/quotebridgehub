@@ -64,11 +64,7 @@ const Main = () => {
           </p>
 
           <p className="font-semibold text-gray-900">
-            We do not offer every plan available in your area. Currently, we
-            represent x organizations offering xx products in your area. For a
-            complete list of your options, please visit Medicare.gov, call
-            1-800-MEDICARE, or contact your local State Health Insurance Program
-            (SHIP).
+           We do not offer every plan available in your area. Currently we represent [HMO, PPO and PFFS] organizations which offer [Medicare Advantage, Prescription Drug (Part D) and Medicare Supplement Insurance Plans] products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program( SHIP ) to get information on all of your options
           </p>
 
           <p>
