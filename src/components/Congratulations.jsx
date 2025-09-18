@@ -19,7 +19,7 @@ export default function Congratulations() {
             <a
               href="tel:8004952740"
               className="block mt-6"
-              aria-label="Click to call toll-free 8042089767"
+              aria-label="Click to call toll-free 804-208-9767"
             >
               <div className="relative overflow-hidden bg-blue-600 hover:bg-blue-700 transition-colors text-white rounded-lg shadow-xl px-4 sm:px-5 py-4 sm:py-5 neon-call">
                 <div className="flex items-center justify-center gap-3">
@@ -36,7 +36,7 @@ export default function Congratulations() {
                     </svg>
                   </span>
                   <div className="text-center">
-                    <div className="text-2xl font-extrabold tracking-wide">8042089767</div>
+                    <div className="text-2xl font-extrabold tracking-wide">804-208-9767</div>
                     <div className="text-[12px] sm:text-sm opacity-95 font-semibold">CLICK TO CALL </div>
                   </div>
                 </div>

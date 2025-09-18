@@ -31,7 +31,7 @@ const Navbar = () => {
           <a 
             href="tel:8004952740" 
             className="flex items-center bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2 shadow-lg transition-colors cursor-pointer"
-            aria-label="Call toll-free 8042089767"
+            aria-label="Call toll-free 804-208-9767"
           >
             <div className="bg-white rounded-full p-2 mr-3">
               <PhoneCall className="text-blue-500 w-5 h-5" />
@@ -41,7 +41,7 @@ const Navbar = () => {
                 CALL  M-F 9AM-5PM EST
               </p>
               <p className="text-lg font-bold">
-                8042089767
+                804-208-9767
               </p>
             </div>
           </a>
